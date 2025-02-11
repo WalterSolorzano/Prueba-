@@ -1,6 +1,6 @@
 import requests
-import time
 import urllib3
+import time
 
 # Deshabilitar advertencias de SSL
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -28,7 +28,7 @@ def enviar_mensaje_telegram(mensaje):
 # Función para verificar el estado de la página
 def verificar_pagina():
     try:
-        response = requests.get(URL_UNIVERSIDAD, verify=False)  # Deshabilitar verificación SSL
+        response = requests.get(URL_UNIVERSIDAD, verify=False, timeout=10)  # Timeout de 10 segundos
         if response.status_code == 200:
             enviar_mensaje_telegram("¡La página está activa! Ve a matricularte.")
             return True
@@ -39,11 +39,13 @@ def verificar_pagina():
         print(f"Error al conectar: {e}")
         return False
 
-# Bucle para verificar cada 15 minutos
-while True:
+# Ejecutar la verificación durante 10 minutos
+start_time = time.time()  # Tiempo de inicio
+duration = 10 * 60  # 10 minutos en segundos
+
+while time.time() - start_time < duration:
     if verificar_pagina():
-        # Si la página está activa, espera 15 minutos antes de volver a verificar
-        time.sleep(900)  # 900 segundos = 15 minutos
-    else:
-        # Si la página no está activa, espera 5 minutos antes de volver a verificar
-        time.sleep(300)  # 300 segundos = 5 minutos
+        break  # Si la página está activa, salir del bucle
+    time.sleep(60)  # Espera 1 minuto antes de volver a verificar
+
+print("El script ha finalizado después de 10 minutos.")

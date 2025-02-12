@@ -1,7 +1,7 @@
 name: Monitor Universidad
 on:
   schedule:
-    - cron: '*/12 * * * *'  # Ejecuta cada 10 minutos
+    - cron: '*/10 * * * *'  # Ejecuta cada 10 minutos
 jobs:
   monitor:
     runs-on: ubuntu-latest
